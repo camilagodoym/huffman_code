@@ -8,7 +8,7 @@ using namespace std;
 struct newNode {
 	//the values comes from lines 64 to 68
 	//there is a FOR that will send values
-	// and frequencies accordint to value i
+	// and frequencies according to value i
 	char S;
 	int f;
 	//this will build Left and right child of this node
@@ -48,8 +48,8 @@ void printCodes(struct newNode* root, string str)
 
 	}
 
-	printCodes(root->left, str + "0");
-	printCodes(root->right, str + "1");
+	printCodes(root->left, str + "0");//smallest value has 0
+	printCodes(root->right, str + "1");//right values has 1
 }
 
 
@@ -76,13 +76,19 @@ void generateHuffman(char S[], int f[], int size)
 	//this is the basic concept of a miniHeap
 	while (minHeap.size() != 1) {
 
+		
+		//After creating an empty node 
+		// Assign the minimum frequency to the left child of z and assign the second minimum 
+		//frequency to the right child of z. 
+		//Set the value of the z as the sum of the above two minimum frequencies.
+
 		// Extract the two minimum f items from minHeap
 		left = minHeap.top();
 		minHeap.pop();
 
 		right = minHeap.top();
 		minHeap.pop();
-
+		// create a new node with the frequency of two nodes.
 		top = new newNode('@', left->f + right->f);
 
 		top->left = left;
