@@ -1,0 +1,121 @@
+#include <bits/stdc++.h> //I choose to use this include to simplify the algorith
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string>
+using namespace std;
+
+struct newNode {
+	//the values comes from lines 64 to 68
+	//there is a FOR that will send values
+	// and frequencies accordint to value i
+	char S;
+	int f;
+	//this will build Left and right child of this node
+	newNode* left, * right;
+
+	newNode(char S, int f)
+	{
+
+		left = right = NULL;
+		this->S = S;
+		this->f = f;
+	}
+};
+
+
+// this will compare two heap nodes and
+//return bool value
+struct compare {
+
+	bool operator()(newNode* x, newNode* y)
+
+	{
+		return (x->f > y->f);
+	}
+};
+
+
+//this code will print values from the botton up.
+void printCodes(struct newNode* root, string str)
+{
+
+	if (root == 0) {
+		return;
+	}
+	else if (root->S != '@') {
+		cout << str << " ";
+
+	}
+
+	printCodes(root->left, str + "0");
+	printCodes(root->right, str + "1");
+}
+
+
+void generateHuffman(char S[], int f[], int size)
+{
+
+	struct newNode* left, * right, * top;
+
+	//container adaptors, specifically designed such that the 
+	//first element is always the greatest of the elements it contains, 
+	//according to some ordering criteria
+	priority_queue<newNode*, vector<newNode*>, compare> minHeap;
+
+	// Create a leaf node for each character and build a 
+	//min heap using all the nodes 
+	//The frequency value is used to compare two nodes in min heap
+	for (int i = 0; i < size; ++i)
+	{
+		//Inserts a new element at the top of the stack , above its current top element.
+		minHeap.push(new newNode(S[i], f[i]));
+	}
+	//this will build the tree according to size
+	//smalled in the left then right
+	//this is the basic concept of a miniHeap
+	while (minHeap.size() != 1) {
+
+		// Extract the two minimum f items from minHeap
+		left = minHeap.top();
+		minHeap.pop();
+
+		right = minHeap.top();
+		minHeap.pop();
+
+		top = new newNode('@', left->f + right->f);
+
+		top->left = left;
+		top->right = right;
+
+		//cout << "top" <<top<<" ";
+
+		minHeap.push(top);
+
+	}
+
+	//print top down
+	printCodes(minHeap.top(), "");
+}
+
+
+int main()
+{
+	string s = "abcdef";
+	int f[] = { 5, 9, 12, 13, 16, 45 };
+
+	//transform string s in char S[]
+	int n = s.length();
+	char S[n];
+	strcpy(S, s.c_str());
+
+	//calculate the array size
+	int size = sizeof(S) / sizeof(S[0]);
+
+	//cout << "S :  "<< s<<endl;
+	//cout << "F"<< f << endl;;
+	//send arrays values, frequencies and array size
+	generateHuffman(S, f, size);
+
+	return 0;
+}
